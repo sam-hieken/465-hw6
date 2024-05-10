@@ -127,7 +127,7 @@ bool interpreter::setVariable(string& line, optype& oper) {
     rtrim(val);
     
     // String
-    if (str_starts_with(val, "\"") && str_ends_with(val, "\""))
+    if (str_starts_with(val, "\"") && str_ends_with(val, "\"")) 
         return setVariable(name, value(val.substr(1, val.length() - 2)), oper);
     
     // Integer
@@ -166,7 +166,7 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     
     // Different datatypes; cannot operate on it, runtime error.
     else if (prevIsNumber != isNumber) return false;
-    
+
     switch (oper) {
     
     case optype::ADD:
@@ -184,7 +184,6 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
         if (!isNumber) return false;
         variables[name] = *prevValue.getInt() - *val.getInt();
         
-        cout << "result " << *this->variables[name].getInt() << endl; 
         return true;
         
     case optype::MULTIPLY:
@@ -232,7 +231,7 @@ bool str_ends_with(const string& fullString, const string& ending) {
 }
 
 bool str_starts_with(const string& fullString, const string& prefix) {
-    return fullString.rfind(prefix) == 0;
+    return fullString.rfind(prefix, 0) == 0;
 }
 
 void ltrim(string &s) {
