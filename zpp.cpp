@@ -9,6 +9,8 @@ interpreter::interpreter(map<string, value> variables) {
 }
 
 bool interpreter::interpret(string& line) {
+    // cout << "EXECUTING: " << line << endl;
+
     ltrim(line);
     rtrim(line);
 		
@@ -56,14 +58,18 @@ bool interpreter::loop(vector<string> line) {
 }
 
 bool interpreter::loop(string& loopContent, int i) {
-    regex pattern("(?<=;)(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+    regex pattern(" ;");
+
     sregex_token_iterator it(loopContent.begin(), loopContent.end(), pattern, -1); 
     vector<string> resultArray(it, sregex_token_iterator()); 
     
     for (int j = 0; j < i; j++) 
-        for (string line : resultArray)
+        for (string line : resultArray) {
+            line += " ;";
+
             if (!interpret(line))
                 return false;
+        }
         
     return true;
 }
@@ -159,23 +165,38 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     
     value prevValue = this->variables[name];
     const bool prevIsNumber = prevValue.getType() == VAL_INT;
+
+    // cout << name << ", " << val.getType() << endl;
     
     // No value assigned to variable already; cannot operate 
     // on it, runtime error.
-    if (!this->variables.count(name)) return false;
+    if (!this->variables.count(name)) 
+        return false;
     
-    // Different datatypes; cannot operate on it, runtime error.
-    else if (prevIsNumber != isNumber) return false;
+    // Cannot add a string to an int; we can only
+    // add an int to a string (or to an int).
+    else if (prevIsNumber && !isNumber)
+        return false;
 
     switch (oper) {
     
     case optype::ADD:
-        if (isNumber) {
+        // Due to our previous check, val must also be a number if prev is.
+        if (prevIsNumber) {
             const int prevInt = *prevValue.getInt();
             variables[name] = value(prevInt + *(val.getInt()));
         }
 
-        else variables[name] = value(*prevValue.getString() + *val.getString());
+        else {
+            string str;
+
+            if (isNumber) 
+                str = to_string(*val.getInt());
+            
+            else str = *val.getString();
+
+            this->variables[name] = value(*prevValue.getString() + str);
+        }
                 
         return true;
         
@@ -219,7 +240,7 @@ bool interpreter::print(string& variableName) {
 
 bool isNumeric(string str) {
     regex pattern("-?\\d+(\\.\\d+)?"); 
-
+    
     return regex_match(str, pattern);  //match a number with optional '-' and decimal.
 }
 

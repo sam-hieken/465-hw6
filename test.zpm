@@ -8,6 +8,7 @@ C -= A ;
 DOG = "woof" ;
 CAT = "meow " ;
 CAT += DOG ;
+CAT += C ;
 
 PRINT C ;
 PRINT CAT ;
