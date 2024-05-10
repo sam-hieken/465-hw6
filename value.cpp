@@ -29,6 +29,7 @@ public:
     value(int value) {
         this->int_address = new int(value);
         this->type = VAL_INT;
+        cout << value << "," << *(this->getInt()) << endl;
     }
 
     ~value() {

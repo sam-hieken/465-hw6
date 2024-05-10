@@ -153,7 +153,9 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     
     // No checks needed; variables can change datatypes
     else if (oper == optype::SET) {
+        cout << *val.getInt() << ", ";
         this->variables[name] = val;
+        cout << *(variables[name].getInt()) << endl;
         return true;
     }
     
@@ -170,9 +172,13 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     switch (oper) {
     
     case optype::ADD:
-        variables[name] = isNumber 
-                ? value(*prevValue.getInt() + *val.getInt()) 
-                : value(*prevValue.getString() + *val.getString());
+        if (isNumber) {
+            const int prevInt = *prevValue.getInt();
+            variables[name] = value(prevInt + *(val.getInt()));
+        }
+
+        else variables[name] = value(*prevValue.getString() + *val.getString());
+                
         return true;
         
     case optype::SUBTRACT:

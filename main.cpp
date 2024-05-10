@@ -11,9 +11,6 @@ int main(int argc, char* argv[]) {
         cerr << "Error: Only 1 argument allowed (ZPM file path)." << endl;
         return 1;
     }
-    
-    cout << argv[1] << endl;
-    // run(args[0]);
 
     return run(string(argv[1]));
 }
@@ -36,6 +33,8 @@ int run(string filename) {
             cerr << "RUNTIME ERROR: line " << lineNumber << endl;
             return -1;
         }
+
+        cout << line << endl << endl;
     }
     
     file.close();
