@@ -13,9 +13,10 @@ CAT += C ;
 PRINT C ;
 PRINT CAT ;
 
+I = 8 ;
 X = 1 ;
 Y = 0 ;
-FOR 7 Y += X ; X *= 2 ; PRINT X ; ENDFOR
+FOR I Y += X ; X *= 2 ; PRINT X ; ENDFOR
 X += 1000 ;
 PRINT X ;
 PRINT Y ;

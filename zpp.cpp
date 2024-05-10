@@ -9,8 +9,6 @@ interpreter::interpreter(map<string, value> variables) {
 }
 
 bool interpreter::interpret(string& line) {
-    // cout << "EXECUTING: " << line << endl;
-
     ltrim(line);
     rtrim(line);
 		
@@ -43,8 +41,12 @@ bool interpreter::loop(vector<string> line) {
     const string times = line[1];
     const string endFor = line[line.size() - 1];
     
-    // Runtime error, either number not specified, or endfor not specified.
-    if (!isNumeric(times) || !(endFor == "ENDFOR"))
+    const bool timesIsNumber = isNumeric(times);
+
+    // Runtime error, either number not specified (and is not a variable), 
+    // or endfor not specified.
+    if ((!timesIsNumber && !this->variables.count(times))
+            || !(endFor == "ENDFOR")) 
         return false;
 
     // Stores all of the lines of code inside the loop.
@@ -53,8 +55,23 @@ bool interpreter::loop(vector<string> line) {
         loopContent += (it != line.begin() + 2 ? " " : "") + *it;
     
     // Actual loop logic
+
+    int ntimes;
+
+    if (timesIsNumber)
+        ntimes = atoi(times.c_str());
     
-    return loop(loopContent, atoi(times.c_str()));
+    else {
+        value val = this->variables[times];
+
+        if (val.getType() != VAL_INT) {
+            return false;
+        }
+
+        ntimes = *val.getInt();
+    }
+    
+    return loop(loopContent, ntimes);
 }
 
 bool interpreter::loop(string& loopContent, int i) {
@@ -165,8 +182,6 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     
     value prevValue = this->variables[name];
     const bool prevIsNumber = prevValue.getType() == VAL_INT;
-
-    // cout << name << ", " << val.getType() << endl;
     
     // No value assigned to variable already; cannot operate 
     // on it, runtime error.
