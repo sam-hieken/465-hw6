@@ -58,7 +58,7 @@ bool interpreter::loop(vector<string> line) {
 bool interpreter::loop(string& loopContent, int i) {
     regex pattern("(?<=;)(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
     sregex_token_iterator it(loopContent.begin(), loopContent.end(), pattern, -1); 
-    vector<std::string> resultArray(it, sregex_token_iterator()); 
+    vector<string> resultArray(it, sregex_token_iterator()); 
     
     for (int j = 0; j < i; j++) 
         for (string line : resultArray)
@@ -153,9 +153,7 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
     
     // No checks needed; variables can change datatypes
     else if (oper == optype::SET) {
-        cout << *val.getInt() << ", ";
         this->variables[name] = val;
-        cout << *(variables[name].getInt()) << endl;
         return true;
     }
     
@@ -185,6 +183,8 @@ bool interpreter::setVariable(string& name, value val, optype& oper) {
         // Can't subtract strings
         if (!isNumber) return false;
         variables[name] = *prevValue.getInt() - *val.getInt();
+        
+        cout << "result " << *this->variables[name].getInt() << endl; 
         return true;
         
     case optype::MULTIPLY:

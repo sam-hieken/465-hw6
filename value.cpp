@@ -29,7 +29,16 @@ public:
     value(int value) {
         this->int_address = new int(value);
         this->type = VAL_INT;
-        cout << value << "," << *(this->getInt()) << endl;
+    }
+
+    value(const value& other) {
+        copy(other);
+    }
+
+    value& operator=(const value& other) {
+        copy(other);
+
+        return *this;
     }
 
     ~value() {
@@ -58,5 +67,17 @@ public:
 
     unsigned getType() {
         return this->type;
+    }
+
+    void copy(const value& other) {
+        if (other.type == VAL_STRING) {
+            this->str_address = new string(*other.str_address);
+            this->type = VAL_STRING;
+        }
+
+        else {
+            this->int_address = new int(*other.int_address);
+            this->type = VAL_INT;
+        }
     }
 };

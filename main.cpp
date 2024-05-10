@@ -34,7 +34,7 @@ int run(string filename) {
             return -1;
         }
 
-        cout << line << endl << endl;
+        // cout << line << endl << endl;
     }
     
     file.close();
