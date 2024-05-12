@@ -35,7 +35,7 @@ bool interpreter::interpret(string& line) {
     return setVariable(line);
 }
 
-bool interpreter::loop(vector<string> line) {
+bool interpreter::loop(vector<string>& line) {
     // Error checks
 
     const string times = line[1];

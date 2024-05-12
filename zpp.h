@@ -26,7 +26,7 @@ public:
     bool interpret(string&);
 
 private:
-    bool loop(vector<string>);
+    bool loop(vector<string>&);
     bool loop(string&, int);
 
     bool setVariable(string&);
