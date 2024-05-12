@@ -15,6 +15,8 @@ int main(int argc, char* argv[]) {
     return run(string(argv[1]));
 }
 
+// Run the ZPM file.
+// Returns the program's stauts code; 0 if successful, -1 if error.
 int run(string filename) {
     interpreter interp;
     ifstream file(filename);
